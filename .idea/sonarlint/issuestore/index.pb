@@ -1,0 +1,7 @@
+
+k
+;vlg_parser_crawlers/vlg_parser_crawlers/spiders/__init__.py,5/7/579d17399fb5742c9f39286ab773e2ddc9fb293e
+j
+:vlg_parser_crawlers/vlg_parser_crawlers/spiders/cian_ru.py,3/b/3be659226d622973704463c02cafe0b27dbcd89a
+c
+3vlg_parser_crawlers/vlg_parser_crawlers/settings.py,0/3/03adae047fe8c00b1f0fac6482b18787f43d2f34

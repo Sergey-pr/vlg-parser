@@ -10,7 +10,7 @@ class OfferTable(tables.Table):
     area = tables.Column()
     kitchen_area = tables.Column()
     floor = tables.Column(attrs={"th": {"style": "width: 70px"}})
-    old_price = tables.Column(attrs={"th": {"style": "width: 100px"}})
+    old_prices = tables.Column(attrs={"th": {"style": "width: 100px"}})
 
     def render_price(self, value, record):
         return "{0:,}".format(value).replace(',', ' ').replace('.0', '') + ' ₽'
