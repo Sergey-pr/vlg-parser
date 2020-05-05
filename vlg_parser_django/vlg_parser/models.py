@@ -43,3 +43,20 @@ class Offer(TimeStampedModel):
             return self.cian_id if self.cian_id else self.avito_id
         else:
             return ''
+
+
+class Statistic(TimeStampedModel):
+    modified = ModificationDateTimeField('Обновлено')
+
+    class Meta:
+        db_table = 'statistic'
+
+    price_change = models.CharField("Изменение цены", max_length=512, blank=True, null=True)
+    price_per_sq_change = models.CharField("Изменение цены за м²", max_length=512, blank=True, null=True)
+    price_per_sq = models.FloatField("Цена за м²", null=True, blank=True)
+    interesting_offers = ArrayField(
+        models.CharField(max_length=512, null=True, blank=True),
+        verbose_name="Старая цена",
+        null=True,
+        blank=True
+    )
