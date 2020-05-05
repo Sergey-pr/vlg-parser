@@ -7,11 +7,6 @@ from django.core.management import BaseCommand
 from vlg_parser.models import Statistic
 
 
-REQUEST_KWARGS = {
-    'proxy_url': ''
-}
-
-
 class Command(BaseCommand):
     def __init__(self):
         super(Command, self).__init__()

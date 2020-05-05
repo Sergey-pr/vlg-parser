@@ -9,19 +9,33 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         price_per_sq = self.get_price_per_sq()
+        price = self.get_price()
         create_args = {
             'price_per_sq': price_per_sq,
-            'price_change': self.get_price_change(),
-            'interesting_offers': self.get_interesting_offers()
+            'interesting_offers': self.get_interesting_offers(),
+            'price': price
         }
 
         if Statistic.objects.count():
             last_statistic = Statistic.objects.latest('created')
             if last_statistic:
                 price_per_sq_change = self.get_price_per_sq_change(last_statistic, price_per_sq)
-                create_args.update({'price_per_sq_change': price_per_sq_change})
+                price_change = self.get_price_change(last_statistic, price)
+                create_args.update({
+                    'price_per_sq_change': price_per_sq_change,
+                    'price_change': price_change
+                })
 
         Statistic.objects.create(**create_args)
+
+    @staticmethod
+    def get_price():
+        price_list = []
+        offers = Offer.objects.filter(price__isnull=False)
+        for offer in offers:
+            price_list.append(offer.price)
+        price = sum(price_list) / len(price_list)
+        return round(price, 2)
 
     @staticmethod
     def get_price_per_sq():
@@ -34,18 +48,9 @@ class Command(BaseCommand):
         return round(price_per_sq, 2)
 
     @staticmethod
-    def get_price_change():
-        prices_change_list = []
-        offers = Offer.objects.filter(price__isnull=False, old_prices__isnull=False)
-        for offer in offers:
-            last_price = offer.old_prices[-1]
-            current_price = offer.price
-            if not last_price or not current_price:
-                continue
-            price_change = 100 - ((round(last_price, 2) / round(current_price, 2)) * 100.0)
-            prices_change_list.append(price_change)
-        prices_change = sum(prices_change_list) / len(prices_change_list)
-        return round(prices_change, 2)
+    def get_price_change(last_statistic, price) -> float:
+        price_change = 100 - ((round(last_statistic.price, 2) / round(price, 2)) * 100.0)
+        return round(price_change, 2)
 
     @staticmethod
     def get_price_per_sq_change(last_statistic, price_per_sq):

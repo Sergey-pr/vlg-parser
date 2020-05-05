@@ -51,8 +51,9 @@ class Statistic(TimeStampedModel):
     class Meta:
         db_table = 'statistic'
 
-    price_change = models.CharField("Изменение цены", max_length=512, blank=True, null=True)
-    price_per_sq_change = models.CharField("Изменение цены за м²", max_length=512, blank=True, null=True)
+    price = models.FloatField("Цена за м²", null=True, blank=True)
+    price_change = models.FloatField("Изменение цены", blank=True, null=True)
+    price_per_sq_change = models.FloatField("Изменение цены за м²", blank=True, null=True)
     price_per_sq = models.FloatField("Цена за м²", null=True, blank=True)
     interesting_offers = ArrayField(
         models.CharField(max_length=512, null=True, blank=True),
