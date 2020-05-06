@@ -88,7 +88,9 @@ class Command(BaseCommand):
                     symbol = ':x:'
                 else:
                     symbol = ':white_check_mark:'
-                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}\n{offer.avito_url}'
+                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
+                message += f'\nПлощадь: {offer.area} м²'
+                message += f'\n{offer.avito_url}'
 
             elif offer.cian_old_prices:
                 old_price = offer.cian_old_prices[-1]
@@ -99,7 +101,9 @@ class Command(BaseCommand):
                     symbol = ':x:'
                 else:
                     symbol = ':white_check_mark:'
-                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}\n{offer.cian_url}'
+                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
+                message += f'\nПлощадь: {offer.area} м²'
+                message += f'\n{offer.cian_url}'
         return message
 
     @staticmethod
