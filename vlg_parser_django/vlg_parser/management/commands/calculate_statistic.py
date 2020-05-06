@@ -1,4 +1,5 @@
 from django.core.management import BaseCommand
+from django.db.models import Q
 
 from vlg_parser.models import Offer, Statistic
 
@@ -31,18 +32,25 @@ class Command(BaseCommand):
     @staticmethod
     def get_price():
         price_list = []
-        offers = Offer.objects.filter(price__isnull=False)
-        for offer in offers:
-            price_list.append(offer.price)
+        avito_offers = Offer.objects.filter(avito_price__isnull=False)
+        for offer in avito_offers:
+            price_list.append(offer.avito_price)
+        avito_offers = Offer.objects.filter(cian_price__isnull=False)
+        for offer in avito_offers:
+            price_list.append(offer.cian_price)
         price = sum(price_list) / len(price_list)
         return round(price, 2)
 
     @staticmethod
     def get_price_per_sq():
         prices_per_sq_list = []
-        offers_with_sq = Offer.objects.filter(area__isnull=False, price__isnull=False)
-        for offer in offers_with_sq:
-            offer_price_per_sq = offer.price / offer.area
+        avito_offers_with_sq = Offer.objects.filter(area__isnull=False, avito_price__isnull=False)
+        for offer in avito_offers_with_sq:
+            offer_price_per_sq = offer.avito_price / offer.area
+            prices_per_sq_list.append(offer_price_per_sq)
+        cian_offers_with_sq = Offer.objects.filter(area__isnull=False, cian_price__isnull=False)
+        for offer in cian_offers_with_sq:
+            offer_price_per_sq = offer.cian_price / offer.area
             prices_per_sq_list.append(offer_price_per_sq)
         price_per_sq = sum(prices_per_sq_list) / len(prices_per_sq_list)
         return round(price_per_sq, 2)
@@ -60,6 +68,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_interesting_offers():
-        offers = Offer.objects.filter(price__lte=1200000, area__gte=40)
+        offers = Offer.objects.filter(Q(cian_price__lte=1200000) | Q(avito_price__lte=1200000), area__gte=40)
         urls = [x.url for x in offers]
         return urls

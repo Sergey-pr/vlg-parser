@@ -22,7 +22,7 @@ class OfferTable(tables.Table):
             return '—'
 
     def render_name(self, value, record):
-        return format_html("<a href={}>{}</b>", record.url, value)
+        return format_html("{}\n<a href={}>Avito</a>\n<a href={}>Cian</a>", value, record.avito_url, record.cian_url)
 
     def render_area(self, value, record):
         return str(value).replace('.', ',') + ' м²'

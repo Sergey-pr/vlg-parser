@@ -11,9 +11,13 @@ class Offer(TimeStampedModel):
         db_table = 'offer'
 
     cian_id = models.CharField(max_length=512, blank=True, null=True)
+    cian_url = models.URLField(max_length=512, blank=True, null=True)
+    cian_price = models.FloatField("Цена Cian", null=True, blank=True)
     avito_id = models.CharField(max_length=512, blank=True, null=True)
-    url = models.URLField(max_length=512, blank=True, null=True)
+    avito_url = models.URLField(max_length=512, blank=True, null=True)
+    avito_price = models.FloatField("Цена Avito", null=True, blank=True)
     address = models.CharField("Адрес", max_length=512, blank=True, null=True)
+    address_location = models.CharField(max_length=512, blank=True, null=True)
     area = models.FloatField("Площадь", blank=True, null=True)
     floor = models.CharField("Этаж", max_length=512, blank=True, null=True)
     type = models.CharField(max_length=512, blank=True, null=True)
@@ -28,10 +32,15 @@ class Offer(TimeStampedModel):
     plan = models.CharField(max_length=512, blank=True, null=True)
     building_info = models.CharField(max_length=512, blank=True, null=True)
     name = models.CharField("Название", max_length=512, blank=True, null=True, default='Квартира')
-    price = models.FloatField("Цена", null=True, blank=True)
-    old_prices = ArrayField(
+    cian_old_prices = ArrayField(
         models.IntegerField(null=True, blank=True),
-        verbose_name="Старая цена",
+        verbose_name="Старая цена Cian",
+        null=True,
+        blank=True
+    )
+    avito_old_prices = ArrayField(
+        models.IntegerField(null=True, blank=True),
+        verbose_name="Старая цена Avito",
         null=True,
         blank=True
     )

@@ -7,7 +7,8 @@ from vlg_parser.models import Offer
 class OfferAdmin(admin.ModelAdmin):
     list_display = [
         'name',
-        'price',
+        'cian_price',
+        'avito_price',
         'address',
         'show_url',
         'area',
@@ -27,7 +28,8 @@ class OfferAdmin(admin.ModelAdmin):
         'building_info',
         'cian_id',
         'avito_id',
-        'old_prices',
+        'cian_old_prices',
+        'avito_old_prices',
         'modified'
     ]
 
