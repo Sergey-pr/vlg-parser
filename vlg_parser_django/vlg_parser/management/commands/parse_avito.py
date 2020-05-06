@@ -41,6 +41,9 @@ class Command(BaseCommand):
         for offer in data:
             avito_id, clean_data = self.parse_data(offer)
 
+            if not avito_id or clean_data.get('name'):
+                continue
+
             offer_obj = Offer.objects.filter(avito_id=avito_id).first()
             if offer_obj:
                 old_price = offer_obj.price

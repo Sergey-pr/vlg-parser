@@ -46,6 +46,9 @@ class Command(BaseCommand):
         for offer in data:
             cian_id, clean_data = self.parse_data(offer)
 
+            if not cian_id or clean_data.get('name'):
+                continue
+
             offer_obj = Offer.objects.filter(cian_id=cian_id).first()
             if offer_obj:
                 old_price = offer_obj.price
@@ -68,6 +71,8 @@ class Command(BaseCommand):
         clean_data = {}
         cian_id = None
         for key, value in data.items():
+            if not value:
+                continue
             if key == 'cian_id':
                 cian_id = value
                 continue

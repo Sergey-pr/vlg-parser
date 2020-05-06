@@ -5,7 +5,13 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+from rotating_proxies.middlewares import RotatingProxyMiddleware
+
 from scrapy import signals
+from scrapy.exceptions import IgnoreRequest
+
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.utils.response import get_meta_refresh
 
 
 class VlgParserCrawlersSpiderMiddleware:
@@ -71,8 +77,9 @@ class VlgParserCrawlersDownloaderMiddleware:
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
-
         # Must either:
+        if 'captcha' in request.url:
+            raise IgnoreRequest
         # - return None: continue processing this request
         # - or return a Response object
         # - or return a Request object
@@ -82,7 +89,6 @@ class VlgParserCrawlersDownloaderMiddleware:
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
-
         # Must either;
         # - return a Response object
         # - return a Request object
@@ -92,12 +98,35 @@ class VlgParserCrawlersDownloaderMiddleware:
     def process_exception(self, request, exception, spider):
         # Called when a download handler or a process_request()
         # (from other downloader middleware) raises an exception.
-
+        if exception == IgnoreRequest:
+            request.url = request.url.replace('https://volgograd.cian.ru/captcha/?redirect_url=', '')
+            return request
         # Must either:
         # - return None: continue processing this exception
         # - return a Response object: stops process_exception() chain
         # - return a Request object: stops process_exception() chain
-        pass
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class CustomRetryMiddleware(RetryMiddleware):
+
+    def process_response(self, request, response, spider):
+        log = spider.logger
+        url = response.url
+        if response.status in [301, 307]:
+            log.info("trying to redirect us: %s" % url)
+            reason = 'redirect %d' % response.status
+            return self._retry(request, reason, spider) or response
+        interval, redirect_url = get_meta_refresh(response)
+        # handle meta redirect
+        if redirect_url:
+            log.info("trying to redirect us: %s" % url)
+            reason = 'meta'
+            return self._retry(request, reason, spider) or response
+        if 'captcha' in request.url:
+            log.info("captcha page %s" % url)
+            reason = 'captcha'
+            return self._retry(request, reason, spider) or response
+        return response

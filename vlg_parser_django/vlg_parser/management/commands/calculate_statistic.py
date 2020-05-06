@@ -60,6 +60,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_interesting_offers():
-        offers = Offer.objects.filter(price__lte=1200000, area__gte=50)
+        offers = Offer.objects.filter(price__lte=1200000, area__gte=40)
         urls = [x.url for x in offers]
         return urls

@@ -38,3 +38,11 @@ U
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
 V
 &vlg_parser_django/vlg_parser/tables.py,0/e/0ebadc1310b7b6006f5b1bdf8463af714c97326c
+d
+4vlg_parser_crawlers/vlg_parser_crawlers/pipelines.py,8/3/83bdd50476c74ce099f495ebe28adb8099880b6d
+f
+6vlg_parser_crawlers/vlg_parser_crawlers/middlewares.py,b/2/b235383418088ec0984da65ce88dea22c230f441
+s
+Cvlg_parser_django/vlg_parser/management/commands/telegram_report.py,d/b/db8ca1343c11652bea829b684ba4b2be498f8703
+w
+Gvlg_parser_django/vlg_parser/management/commands/calculate_statistic.py,b/8/b896d005b479fc99a16d283028ca7c550aa3fb49

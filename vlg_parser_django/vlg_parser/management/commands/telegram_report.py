@@ -33,7 +33,7 @@ class Command(BaseCommand):
 {price_per_sq_change_message}
 """
         if offers:
-            message += '\nИнтересные предложения:\n' + offers
+            message += '\nИнтересные предложения (40м² за 1 200 000):\n' + offers
 
         request = Request(proxy_url='socks5h://85.10.235.14:1080')
         bot = telegram.Bot(token='1110571536:AAGWx4vDfuF7TJSd3W--ylZ1U6Axms9ze0o', request=request)

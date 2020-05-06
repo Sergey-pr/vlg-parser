@@ -27,7 +27,7 @@ ROBOTSTXT_OBEY = False
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 10
+
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -88,9 +88,41 @@ DOWNLOAD_DELAY = 10
 #
 # CONCURRENT_REQUESTS_PER_DOMAIN = 10
 
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-#     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    # 'scrapy_useragents.downloadermiddlewares.useragents.UserAgentsMiddleware': 500,
+    # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    # 'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+    'vlg_parser_crawlers.middlewares.CustomRetryMiddleware': 120,
+    'scrapy.contrib.downloadermiddleware.redirect.RedirectMiddleware': None,
+    'scrapy.contrib.downloadermiddleware.redirect.MetaRefreshMiddleware': None,
+}
+
+# USER_AGENTS = [
+#     ('Mozilla/5.0 (X11; Linux x86_64) '
+#      'AppleWebKit/537.36 (KHTML, like Gecko) '
+#      'Chrome/57.0.2987.110 '
+#      'Safari/537.36'),  # chrome
+#     ('Mozilla/5.0 (X11; Linux x86_64) '
+#      'AppleWebKit/537.36 (KHTML, like Gecko) '
+#      'Chrome/61.0.3163.79 '
+#      'Safari/537.36'),  # chrome
+#     ('Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) '
+#      'Gecko/20100101 '
+#      'Firefox/55.0'),  # firefox
+#     ('Mozilla/5.0 (X11; Linux x86_64) '
+#      'AppleWebKit/537.36 (KHTML, like Gecko) '
+#      'Chrome/61.0.3163.91 '
+#      'Safari/537.36'),  # chrome
+#     ('Mozilla/5.0 (X11; Linux x86_64) '
+#      'AppleWebKit/537.36 (KHTML, like Gecko) '
+#      'Chrome/62.0.3202.89 '
+#      'Safari/537.36'),  # chrome
+#     ('Mozilla/5.0 (X11; Linux x86_64) '
+#      'AppleWebKit/537.36 (KHTML, like Gecko) '
+#      'Chrome/63.0.3239.108 '
+#      'Safari/537.36'),  # chrome
+# ]
+
+DOWNLOAD_DELAY = 10
+RANDOMIZE_DOWNLOAD_DELAY = True

@@ -17,9 +17,9 @@ class CianSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.url = 'https://volgograd.cian.ru/cat.php?' \
-                   'deal_type=sale&district%5B0%5D=280&district%5B1%5D=281&district%5B2%5D=282&engine_version=2&' \
-                   'is_by_homeowner=1&object_type%5B0%5D=1&offer_type=flat&room1=1&room2=1&room9=1'
+        self.url = 'https://volgograd.cian.ru/cat.php?deal_type=sale' \
+                   '&district%5B0%5D=280&district%5B1%5D=281&district%5B2%5D=282&engine_version=2' \
+                   '&is_by_homeowner=1&minfloorn=7&offer_type=flat&room1=1&room2=1&room9=1'
         self.page = 1
 
     def start_requests(self):
@@ -40,16 +40,19 @@ class CianSpider(scrapy.Spider):
             yield response.follow(self.url + f'&p={self.page}', self.parse)
 
     def parse_card(self, response):
-        yield {
-            'address': response.xpath('//div[@data-name="Geo"]/span').attrib.get('content'),
-            'building_info': self.get_building_info(response),
-            'price': response.xpath('//span[@itemprop="price"]').xpath(GET_TEXT_ATOM).get(),
-            'name': response.xpath('//h1[@data-name="OfferTitle"]').xpath(GET_TEXT_ATOM).get(),
-            'url': response.request.url,
-            'cian_id': response.request.url.split('/')[-2],
-            **self.get_bonus_info_block(response),
-            **self.get_info_block(response)
-        }
+        name = response.xpath('//h1[@data-name="OfferTitle"]').xpath(GET_TEXT_ATOM).get()
+        cian_id = response.request.url.split('/')[-2]
+        if name and cian_id:
+            yield {
+                'address': response.xpath('//div[@data-name="Geo"]/span').attrib.get('content'),
+                'building_info': self.get_building_info(response),
+                'price': response.xpath('//span[@itemprop="price"]').xpath(GET_TEXT_ATOM).get(),
+                'name': name,
+                'url': response.request.url,
+                'cian_id': cian_id,
+                **self.get_bonus_info_block(response),
+                **self.get_info_block(response)
+            }
 
     @staticmethod
     def get_building_info(response):
