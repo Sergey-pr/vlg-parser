@@ -17,9 +17,9 @@ class CianSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.url = 'https://volgograd.cian.ru/cat.php?deal_type=sale' \
+        self.url = 'https://volgograd.cian.ru/cat.php?currency=2&deal_type=sale' \
                    '&district%5B0%5D=280&district%5B1%5D=281&district%5B2%5D=282&engine_version=2' \
-                   '&is_by_homeowner=1&minfloorn=7&offer_type=flat&room1=1&room2=1&room9=1'
+                   '&maxprice=2000000&minfloorn=7&offer_type=flat&room1=1&room2=1&room9=1'
         self.page = 1
 
     def start_requests(self):

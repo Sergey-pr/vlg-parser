@@ -16,8 +16,8 @@ class Offer(TimeStampedModel):
     avito_id = models.CharField(max_length=512, blank=True, null=True)
     avito_url = models.URLField(max_length=512, blank=True, null=True)
     avito_price = models.FloatField("Цена Avito", null=True, blank=True)
+    price = models.FloatField("Цена", null=True, blank=True)
     address = models.CharField("Адрес", max_length=512, blank=True, null=True)
-    address_location = models.CharField(max_length=512, blank=True, null=True)
     area = models.FloatField("Площадь", blank=True, null=True)
     floor = models.CharField("Этаж", max_length=512, blank=True, null=True)
     type = models.CharField(max_length=512, blank=True, null=True)
@@ -66,7 +66,10 @@ class Statistic(TimeStampedModel):
     price_per_sq = models.FloatField("Цена за м²", null=True, blank=True)
     interesting_offers = ArrayField(
         models.CharField(max_length=512, null=True, blank=True),
-        verbose_name="Старая цена",
+        verbose_name="Интересные предложения",
         null=True,
         blank=True
     )
+    avito_new = models.ManyToManyField(Offer, related_name='avito_new')
+    cian_new = models.ManyToManyField(Offer, related_name='cian_new')
+

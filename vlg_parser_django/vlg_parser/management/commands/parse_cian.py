@@ -9,7 +9,7 @@ from datetime import datetime
 from django.conf import settings
 from django.core.management import BaseCommand, CommandError
 
-from vlg_parser.models import Offer
+from vlg_parser.models import Offer, Statistic
 
 MAPPING_TO_INT = {
     'Общая': 'area',
@@ -20,7 +20,6 @@ MAPPING_TO_INT = {
 MAPPING = {
     'cian_id': 'cian_id',
     'Планировка': 'plan',
-    'address': 'address',
     'url': 'cian_url',
     'Тип жилья': 'type',
     'Высота потолков': 'ceiling_height',
@@ -44,14 +43,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         path = options.get('path_to_file')
+        obj_list = []
         with open(path) as json_file:
             data = json.load(json_file)
 
         for offer in data:
             clean_data = self.parse_data(offer)
 
-            if not clean_data.get('cian_id') or not clean_data.get('name') or not clean_data.get('address_location'):
+            if not clean_data.get('cian_id') or not clean_data.get('name') \
+                    or not clean_data.get('address') or not clean_data.get('floor'):
                 continue
+
+            clean_data['price'] = clean_data.get('cian_price')
 
             offer_obj = Offer.objects.filter(cian_id=clean_data.get('cian_id')).first()
             if offer_obj:
@@ -65,10 +68,17 @@ class Command(BaseCommand):
                     offer_obj.save()
 
             obj, created = Offer.objects.update_or_create(
-                address_location=clean_data.get('address_location'),
+                address=clean_data.get('address'),
                 area=clean_data.get('area'),
+                floor=clean_data.get('floor'),
                 defaults=clean_data,
             )
+            if created:
+                obj_list.append(obj)
+
+        if Statistic.objects.count():
+            last_statistic = Statistic.objects.latest('created')
+            last_statistic.cian_new.set(obj_list)
         os.rename(path, f'{path}.parsed_{datetime.now().timestamp()}')
 
     def parse_data(self, data):
@@ -77,8 +87,8 @@ class Command(BaseCommand):
             if not value:
                 continue
             if key == 'address':
-                address_location = self.get_address_location(value)
-                clean_data.update({'address_location': address_location})
+                address = self.get_address(value)
+                clean_data.update({'address': address})
             if key in MAPPING:
                 clean_data.update({MAPPING.get(key): value})
             if key in MAPPING_TO_INT:
@@ -90,12 +100,16 @@ class Command(BaseCommand):
         return clean_data
 
     @staticmethod
-    def get_address_location(value):
+    def get_address(value):
         api_key = settings.YANDEX_TOKEN
         value = quote_plus(value)
-        endpoint = f'https://geocode-maps.yandex.ru/1.x/?apikey={api_key}&geocode={value}'
+        endpoint = f'https://geocode-maps.yandex.ru/1.x/?apikey={api_key}&format=json&geocode={value}'
         response = requests.get(endpoint)
         if not response.ok:
             raise CommandError('Yandex api error')
-        geo_code = response.text
-        return geo_code
+        response_dict = response.json()
+        address_list = response_dict['response']['GeoObjectCollection'].get('featureMember')
+        if address_list:
+            address = address_list[0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['text']
+            return address
+        return None

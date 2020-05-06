@@ -17,9 +17,13 @@ class Command(BaseCommand):
             'price': price
         }
 
+        new_avito_offers = None
+        new_cian_offers = None
         if Statistic.objects.count():
             last_statistic = Statistic.objects.latest('created')
             if last_statistic:
+                new_avito_offers = list(last_statistic.avito_new.all())
+                new_cian_offers = list(last_statistic.cian_new.all())
                 price_per_sq_change = self.get_price_per_sq_change(last_statistic, price_per_sq)
                 price_change = self.get_price_change(last_statistic, price)
                 create_args.update({
@@ -27,7 +31,11 @@ class Command(BaseCommand):
                     'price_change': price_change
                 })
 
-        Statistic.objects.create(**create_args)
+        stat_obj = Statistic.objects.create(**create_args)
+        if new_avito_offers:
+            stat_obj.avito_new.set(new_avito_offers)
+        if new_cian_offers:
+            stat_obj.cian_new.set(new_cian_offers)
 
     @staticmethod
     def get_price():
@@ -68,6 +76,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_interesting_offers():
-        offers = Offer.objects.filter(Q(cian_price__lte=1200000) | Q(avito_price__lte=1200000), area__gte=40)
+        offers = Offer.objects.filter(Q(cian_price__lte=1500000) | Q(avito_price__lte=1500000), area__gte=40)
         urls = [x.url for x in offers]
         return urls
