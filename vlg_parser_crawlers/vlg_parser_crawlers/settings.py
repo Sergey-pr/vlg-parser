@@ -93,9 +93,9 @@ DOWNLOADER_MIDDLEWARES = {
     # 'scrapy_useragents.downloadermiddlewares.useragents.UserAgentsMiddleware': 500,
     # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
     # 'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-    'vlg_parser_crawlers.middlewares.CustomRetryMiddleware': 120,
-    'scrapy.contrib.downloadermiddleware.redirect.RedirectMiddleware': None,
-    'scrapy.contrib.downloadermiddleware.redirect.MetaRefreshMiddleware': None,
+    # 'vlg_parser_crawlers.middlewares.CustomRetryMiddleware': 120,
+    # 'scrapy.contrib.downloadermiddleware.redirect.RedirectMiddleware': None,
+    # 'scrapy.contrib.downloadermiddleware.redirect.MetaRefreshMiddleware': None,
 }
 
 # USER_AGENTS = [

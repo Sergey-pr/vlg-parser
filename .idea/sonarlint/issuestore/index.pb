@@ -46,3 +46,9 @@ s
 Cvlg_parser_django/vlg_parser/management/commands/telegram_report.py,d/b/db8ca1343c11652bea829b684ba4b2be498f8703
 w
 Gvlg_parser_django/vlg_parser/management/commands/calculate_statistic.py,b/8/b896d005b479fc99a16d283028ca7c550aa3fb49
+O
+vlg_parser_crawlers/proxies.txt,2/7/275cdea41d8dfe00703049c77ef5764ebcb912bf
+@
+requirements.txt,1/9/19359a61ae2446b51b549167b014da2fcf265768
+X
+(vlg_parser_django/vlg_parser_django/.env,e/d/edbae4fa64e7e8e1e1402ff0bf87d11b70ed815c

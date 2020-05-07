@@ -39,12 +39,12 @@ class Command(BaseCommand):
         if offers:
             message += '\nИнтересные предложения (40м² за 1 200 000):\n' + offers
 
-        if stat.avito_new:
+        if stat.avito_new.count():
             message += '\n\nНовые объявления на авито:\n'
             for offer in stat.avito_new.all().order_by('avito_price'):
                 price = self.format_price(offer.avito_price)
                 message += f'\n{price}, {offer.area} м²\n{offer.avito_url}'
-        if stat.cian_new:
+        if stat.cian_new.count():
             message += '\n\nНовые объявления на циан:\n'
             for offer in stat.cian_new.all().order_by('cian_price'):
                 price = self.format_price(offer.cian_price)
