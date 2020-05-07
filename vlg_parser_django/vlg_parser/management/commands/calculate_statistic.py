@@ -75,6 +75,8 @@ class Command(BaseCommand):
             if offer.cian_old_prices:
                 old_prices.append(offer.cian_old_prices[-1])
                 new_prices.append(offer.cian_price)
+        if not old_prices or not new_prices:
+            return 0.0
         old_price = round(sum(old_prices) / len(old_prices), 2)
         new_price = round(sum(new_prices) / len(new_prices), 2)
         price_change = 100 - ((round(old_price, 2) / round(new_price, 2)) * 100.0)
