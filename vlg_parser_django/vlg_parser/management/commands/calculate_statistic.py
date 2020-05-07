@@ -11,10 +11,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         price_per_sq = self.get_price_per_sq()
         price = self.get_price()
+        price_change = self.get_price_change()
         create_args = {
             'price_per_sq': price_per_sq,
             'interesting_offers': self.get_interesting_offers(),
-            'price': price
+            'price': price,
+            'price_change': price_change
         }
 
         new_avito_offers = None
@@ -25,10 +27,8 @@ class Command(BaseCommand):
                 new_avito_offers = list(last_statistic.avito_new.all())
                 new_cian_offers = list(last_statistic.cian_new.all())
                 price_per_sq_change = self.get_price_per_sq_change(last_statistic, price_per_sq)
-                price_change = self.get_price_change(last_statistic, price)
                 create_args.update({
                     'price_per_sq_change': price_per_sq_change,
-                    'price_change': price_change
                 })
 
         stat_obj = Statistic.objects.create(**create_args)
@@ -64,8 +64,20 @@ class Command(BaseCommand):
         return round(price_per_sq, 2)
 
     @staticmethod
-    def get_price_change(last_statistic, price) -> float:
-        price_change = 100 - ((round(last_statistic.price, 2) / round(price, 2)) * 100.0)
+    def get_price_change() -> float:
+        old_prices = []
+        new_prices = []
+        offers = Offer.objects.filter(Q(avito_old_prices__isnull=False) | Q(cian_old_prices__isnull=False))
+        for offer in offers:
+            if offer.avito_old_prices:
+                old_prices.append(offer.avito_old_prices[-1])
+                new_prices.append(offer.avito_price)
+            if offer.cian_old_prices:
+                old_prices.append(offer.cian_old_prices[-1])
+                new_prices.append(offer.cian_price)
+        old_price = round(sum(old_prices) / len(old_prices), 2)
+        new_price = round(sum(new_prices) / len(new_prices), 2)
+        price_change = 100 - ((round(old_price, 2) / round(new_price, 2)) * 100.0)
         return round(price_change, 2)
 
     @staticmethod
