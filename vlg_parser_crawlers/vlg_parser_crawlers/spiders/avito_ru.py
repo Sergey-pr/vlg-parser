@@ -6,6 +6,7 @@ GET_TEXT_ATOM = './/text()'
 
 class AvitoSpider(scrapy.Spider):
     name = "avito_ru"
+    download_delay = 10
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
