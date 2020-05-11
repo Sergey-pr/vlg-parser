@@ -77,7 +77,7 @@ class Command(BaseCommand):
         if not offers:
             return
 
-        message = ''
+        message = '<a href="http://45.143.138.80">Ссылка на таблицу</a>\n\n'
         for offer in offers:
             if offer.avito_old_prices:
                 old_price = offer.avito_old_prices[-1]
