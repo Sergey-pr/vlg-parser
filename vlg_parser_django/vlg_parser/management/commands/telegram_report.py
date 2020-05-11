@@ -30,7 +30,9 @@ class Command(BaseCommand):
         else:
             price_per_sq_change_message = f'Средняя цена за м² поднялась на: {stat.price_per_sq_change}%'
 
-        message = f"""На {datetime.now().astimezone(pytz.timezone('Europe/Volgograd')).strftime("%d/%m/%Y, %H:%M")}:
+        message = f"""<a href="http://45.143.138.80">Ссылка на таблицу</a>\n\n
+
+На {datetime.now().astimezone(pytz.timezone('Europe/Volgograd')).strftime("%d/%m/%Y, %H:%M")}:
 
 {price_message}
 Средняя цена за м²: {self.format_price(stat.price_per_sq)}
@@ -77,7 +79,7 @@ class Command(BaseCommand):
         if not offers:
             return
 
-        message = '<a href="http://45.143.138.80">Ссылка на таблицу</a>\n\n'
+        message = ''
         for offer in offers:
             if offer.avito_old_prices:
                 old_price = offer.avito_old_prices[-1]
