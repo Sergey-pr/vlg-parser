@@ -30,7 +30,7 @@ class Command(BaseCommand):
         else:
             price_per_sq_change_message = f'Средняя цена за м² поднялась на: {stat.price_per_sq_change}%'
 
-        message = f"""<a href="http://45.143.138.80">Ссылка на таблицу</a>\n\n
+        message = f"""[Ссылка на таблицу](http://45.143.138.80)\n\n
 
 На {datetime.now().astimezone(pytz.timezone('Europe/Volgograd')).strftime("%d/%m/%Y, %H:%M")}:
 
@@ -62,12 +62,12 @@ class Command(BaseCommand):
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN, request=request)
 
         if len(message) < 4096:
-            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message)
+            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
         else:
             n = 4096
             messages = [message[i:i+n] for i in range(0, len(message), n)]
             for message in messages:
-                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message)
+                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
 
     def get_changes(self):
         last_day = datetime.today() - timedelta(days=1)
