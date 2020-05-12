@@ -68,12 +68,12 @@ class Command(BaseCommand):
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN, request=request)
 
         if len(message) < 4096:
-            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML ')
+            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML')
         else:
             n = 4096
             messages = [message[i:i+n] for i in range(0, len(message), n)]
             for message in messages:
-                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML ')
+                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML')
 
     def get_changes(self):
         last_day = datetime.today() - timedelta(days=1)
