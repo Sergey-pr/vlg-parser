@@ -18,8 +18,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         stat = Statistic.objects.latest('created')
 
-        offers = '\n'.join(stat.interesting_offers)
-
         if stat.price_change:
             if float(stat.price_change) <= 0:
                 price_message = f'Цены на квартиры упали на {stat.price_change}%'
@@ -44,8 +42,15 @@ class Command(BaseCommand):
 
 <a href="http://45.143.138.80">Ссылка на таблицу</a>"""
 
-        if offers:
-            message += '\nИнтересные предложения (35м² за 1 200 000):\n' + offers
+        if stat.interesting_offers.count():
+            message += '\nИнтересные предложения (35м² за 1 500 000):\n'
+            for offer in stat.interesting_offers.all():
+                if offer.avito_price:
+                    price = self.format_price(offer.avito_price)
+                    message += f'\n{price}, {offer.area} м²\n{offer.avito_url}'
+                else:
+                    price = self.format_price(offer.cian_price)
+                    message += f'\n{price}, {offer.area} м²\n{offer.cian_url}'
 
         if stat.avito_new.count():
             message += '\n\nНовые объявления на авито:\n'

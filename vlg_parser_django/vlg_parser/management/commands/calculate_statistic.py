@@ -12,9 +12,9 @@ class Command(BaseCommand):
         price_per_sq = self.get_price_per_sq()
         price = self.get_price()
         price_change = self.get_price_change()
+        interesting_offers =  self.get_interesting_offers()
         create_args = {
             'price_per_sq': price_per_sq,
-            'interesting_offers': self.get_interesting_offers(),
             'price': price,
             'price_change': price_change
         }
@@ -36,6 +36,8 @@ class Command(BaseCommand):
             stat_obj.avito_new.set(new_avito_offers)
         if new_cian_offers:
             stat_obj.cian_new.set(new_cian_offers)
+        if interesting_offers:
+            stat_obj.interesting_offers.set(interesting_offers)
 
     @staticmethod
     def get_price():
@@ -91,5 +93,4 @@ class Command(BaseCommand):
     @staticmethod
     def get_interesting_offers():
         offers = Offer.objects.filter(Q(cian_price__lte=1500000) | Q(avito_price__lte=1500000), area__gte=35)
-        urls = [x.url for x in offers]
-        return urls
+        return offers
