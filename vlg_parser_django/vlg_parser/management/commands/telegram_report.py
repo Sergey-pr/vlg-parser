@@ -61,7 +61,7 @@ class Command(BaseCommand):
         changes = self.get_changes()
 
         if changes:
-            message += '\n\nИзменения цен:\n'
+            message += '\n\nИзменения цен:'
             message += changes
 
         request = Request(proxy_url=settings.TELEGRAM_PROXY)
@@ -93,10 +93,10 @@ class Command(BaseCommand):
                 if price == old_price:
                     continue
                 if price > old_price:
-                    symbol = ':x:'
+                    symbol = '❌'
                 else:
-                    symbol = ':white_check_mark:'
-                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
+                    symbol = '✅'
+                message += f'\n\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
                 message += f'\nПлощадь: {offer.area} м²'
                 message += f'\n{offer.avito_url}'
 
@@ -106,10 +106,10 @@ class Command(BaseCommand):
                 if price == old_price:
                     continue
                 if price > old_price:
-                    symbol = ':x:'
+                    symbol = '❌'
                 else:
-                    symbol = ':white_check_mark:'
-                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
+                    symbol = '✅'
+                message += f'\n\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
                 message += f'\nПлощадь: {offer.area} м²'
                 message += f'\n{offer.cian_url}'
         return message
