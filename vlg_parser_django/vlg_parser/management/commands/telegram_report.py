@@ -20,23 +20,29 @@ class Command(BaseCommand):
 
         offers = '\n'.join(stat.interesting_offers)
 
-        if stat.price_change and float(stat.price_change) <= 0:
-            price_message = f'Цены на квартиры упали на {stat.price_change}%'
+        if stat.price_change:
+            if float(stat.price_change) <= 0:
+                price_message = f'Цены на квартиры упали на {stat.price_change}%'
+            else:
+                price_message = f'Цены на квартиры поднялись на {stat.price_change}%'
         else:
-            price_message = f'Цены на квартиры поднялись на {stat.price_change}%'
+            price_message = ''
 
-        if stat.price_per_sq_change and float(stat.price_per_sq_change) <= 0:
-            price_per_sq_change_message = f'Средняя цена за м² упала на: {stat.price_per_sq_change}%'
+        if stat.price_per_sq_change:
+            if float(stat.price_per_sq_change) <= 0:
+                price_per_sq_change_message = f'Средняя цена за м² упала на: {stat.price_per_sq_change}%'
+            else:
+                price_per_sq_change_message = f'Средняя цена за м² поднялась на: {stat.price_per_sq_change}%'
         else:
-            price_per_sq_change_message = f'Средняя цена за м² поднялась на: {stat.price_per_sq_change}%'
+            price_per_sq_change_message = ''
 
-        message = f"""[Ссылка на таблицу](http://45.143.138.80)\n\n
-
-На {datetime.now().astimezone(pytz.timezone('Europe/Volgograd')).strftime("%d/%m/%Y, %H:%M")}:
+        message = f"""На {datetime.now().astimezone(pytz.timezone('Europe/Volgograd')).strftime("%d/%m/%Y, %H:%M")}:
 
 {price_message}
 Средняя цена за м²: {self.format_price(stat.price_per_sq)}
 {price_per_sq_change_message}
+
+[Ссылка на таблицу](http://45.143.138.80)
 """
         if offers:
             message += '\nИнтересные предложения (40м² за 1 200 000):\n' + offers
