@@ -42,7 +42,7 @@ class Command(BaseCommand):
 Средняя цена за м²: {self.format_price(stat.price_per_sq)}
 {price_per_sq_change_message}
 
-[Ссылка на таблицу](http://45.143.138.80)
+<a href="http://45.143.138.80">Ссылка на таблицу</a>
 """
         if offers:
             message += '\nИнтересные предложения (40м² за 1 200 000):\n' + offers
@@ -67,15 +67,13 @@ class Command(BaseCommand):
         request = Request(proxy_url=settings.TELEGRAM_PROXY)
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN, request=request)
 
-        message = message.replace('.', '\.').replace('-', '\-')
-
         if len(message) < 4096:
-            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
+            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML ')
         else:
             n = 4096
             messages = [message[i:i+n] for i in range(0, len(message), n)]
             for message in messages:
-                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
+                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML ')
 
     def get_changes(self):
         last_day = datetime.today() - timedelta(days=1)
