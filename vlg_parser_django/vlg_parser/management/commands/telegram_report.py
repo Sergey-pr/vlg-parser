@@ -61,6 +61,8 @@ class Command(BaseCommand):
         request = Request(proxy_url=settings.TELEGRAM_PROXY)
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN, request=request)
 
+        message = message.replace('.', '\.')
+
         if len(message) < 4096:
             bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
         else:
