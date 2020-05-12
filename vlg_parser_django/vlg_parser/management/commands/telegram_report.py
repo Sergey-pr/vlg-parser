@@ -39,6 +39,7 @@ class Command(BaseCommand):
 {price_message}
 Средняя цена за м²: {self.format_price(stat.price_per_sq)}
 {price_per_sq_change_message}
+
 <a href="http://45.143.138.80">Ссылка на таблицу</a>"""
 
         if stat.interesting_offers.count():
