@@ -43,9 +43,9 @@ class Command(BaseCommand):
 {price_per_sq_change_message}
 
 <a href="http://45.143.138.80">Ссылка на таблицу</a>"""
-        
+
         if offers:
-            message += '\nИнтересные предложения (40м² за 1 200 000):\n' + offers
+            message += '\nИнтересные предложения (35м² за 1 200 000):\n' + offers
 
         if stat.avito_new.count():
             message += '\n\nНовые объявления на авито:\n'
