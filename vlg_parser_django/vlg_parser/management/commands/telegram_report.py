@@ -20,12 +20,12 @@ class Command(BaseCommand):
 
         offers = '\n'.join(stat.interesting_offers)
 
-        if float(stat.price_change) <= 0:
+        if stat.price_change and float(stat.price_change) <= 0:
             price_message = f'Цены на квартиры упали на {stat.price_change}%'
         else:
             price_message = f'Цены на квартиры поднялись на {stat.price_change}%'
 
-        if float(stat.price_per_sq_change) <= 0:
+        if stat.price_per_sq_change and float(stat.price_per_sq_change) <= 0:
             price_per_sq_change_message = f'Средняя цена за м² упала на: {stat.price_per_sq_change}%'
         else:
             price_per_sq_change_message = f'Средняя цена за м² поднялась на: {stat.price_per_sq_change}%'
