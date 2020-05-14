@@ -18,8 +18,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         stat = Statistic.objects.latest('created')
 
-        offers = '\n'.join(stat.interesting_offers)
-
         if stat.price_change:
             if float(stat.price_change) <= 0:
                 price_message = f'Цены на квартиры упали на {stat.price_change}%'
@@ -42,10 +40,17 @@ class Command(BaseCommand):
 Средняя цена за м²: {self.format_price(stat.price_per_sq)}
 {price_per_sq_change_message}
 
-[Ссылка на таблицу](http://45.143.138.80)
-"""
-        if offers:
-            message += '\nИнтересные предложения (40м² за 1 200 000):\n' + offers
+<a href="http://45.143.138.80">Ссылка на таблицу</a>"""
+
+        if stat.interesting_offers.count():
+            message += '\n\nИнтересные предложения:\n(35м² за 1 500 000)\n'
+            for offer in stat.interesting_offers.all():
+                if offer.avito_price:
+                    price = self.format_price(offer.avito_price)
+                    message += f'\n{price}, {offer.area} м²\n{offer.avito_url}'
+                else:
+                    price = self.format_price(offer.cian_price)
+                    message += f'\n{price}, {offer.area} м²\n{offer.cian_url}'
 
         if stat.avito_new.count():
             message += '\n\nНовые объявления на авито:\n'
@@ -61,21 +66,19 @@ class Command(BaseCommand):
         changes = self.get_changes()
 
         if changes:
-            message += '\n\nИзменения цен:\n'
+            message += '\n\nИзменения цен:'
             message += changes
 
         request = Request(proxy_url=settings.TELEGRAM_PROXY)
         bot = telegram.Bot(token=settings.TELEGRAM_TOKEN, request=request)
 
-        message = message.replace('.', '\.')
-
         if len(message) < 4096:
-            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
+            bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML')
         else:
             n = 4096
             messages = [message[i:i+n] for i in range(0, len(message), n)]
             for message in messages:
-                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='MarkdownV2')
+                bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message, parse_mode='HTML')
 
     def get_changes(self):
         last_day = datetime.today() - timedelta(days=1)
@@ -95,10 +98,10 @@ class Command(BaseCommand):
                 if price == old_price:
                     continue
                 if price > old_price:
-                    symbol = ':x:'
+                    symbol = '❌'
                 else:
-                    symbol = ':white_check_mark:'
-                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
+                    symbol = '✅'
+                message += f'\n\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
                 message += f'\nПлощадь: {offer.area} м²'
                 message += f'\n{offer.avito_url}'
 
@@ -108,10 +111,10 @@ class Command(BaseCommand):
                 if price == old_price:
                     continue
                 if price > old_price:
-                    symbol = ':x:'
+                    symbol = '❌'
                 else:
-                    symbol = ':white_check_mark:'
-                message += f'\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
+                    symbol = '✅'
+                message += f'\n\n{self.format_price(old_price)} -> {self.format_price(price)} {symbol}'
                 message += f'\nПлощадь: {offer.area} м²'
                 message += f'\n{offer.cian_url}'
         return message

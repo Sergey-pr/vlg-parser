@@ -64,12 +64,7 @@ class Statistic(TimeStampedModel):
     price_change = models.FloatField("Изменение цены", blank=True, null=True)
     price_per_sq_change = models.FloatField("Изменение цены за м²", blank=True, null=True)
     price_per_sq = models.FloatField("Цена за м²", null=True, blank=True)
-    interesting_offers = ArrayField(
-        models.CharField(max_length=512, null=True, blank=True),
-        verbose_name="Интересные предложения",
-        null=True,
-        blank=True
-    )
+    interesting_offers = models.ManyToManyField(Offer, related_name='interesting')
     avito_new = models.ManyToManyField(Offer, related_name='avito_new')
     cian_new = models.ManyToManyField(Offer, related_name='cian_new')
 

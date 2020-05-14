@@ -13,7 +13,7 @@ INFO_BLOCK_KEYS = [
 
 class CianSpider(scrapy.Spider):
     name = "cian_ru"
-    download_delay = 5
+    download_delay = 0
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
