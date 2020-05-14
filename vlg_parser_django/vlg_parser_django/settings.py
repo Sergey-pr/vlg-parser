@@ -1,7 +1,8 @@
 import os
 
 from dotenv import load_dotenv
-load_dotenv()
+project_folder = os.path.expanduser('~/vlg_parser_django')
+load_dotenv(os.path.join(project_folder, '.env'))
 
 YANDEX_TOKEN = os.getenv("YANDEX_TOKEN")
 TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY")
