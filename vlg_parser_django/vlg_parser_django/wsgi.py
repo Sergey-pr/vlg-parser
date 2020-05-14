@@ -10,8 +10,8 @@ import sys
 
 from django.core.wsgi import get_wsgi_application
 
-sys.path.append('/root/workspace/vlg_parser/source/vlg_parser_django')
-sys.path.append('/root/workspace/vlg_parser/.py_env/lib/python3.7/site-packages')
+sys.path.append('/root/workspace/vlg_parser/source/vlg_parser_django/vlg_parser_django')
+sys.path.append('/root/workspace/vlg_parser/.py_env/lib/python3.6/site-packages')
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vlg_parser_django.settings')
 
