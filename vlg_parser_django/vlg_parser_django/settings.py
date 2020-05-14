@@ -1,15 +1,17 @@
 import os
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 YANDEX_TOKEN = os.getenv("YANDEX_TOKEN")
 TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY")
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
