@@ -18,21 +18,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         stat = Statistic.objects.latest('created')
 
+        price_message = 'Цены на квартиры не изменились'
         if stat.price_change:
-            if float(stat.price_change) <= 0:
+            if float(stat.price_change) < 0:
                 price_message = f'Цены на квартиры упали на {stat.price_change}%'
-            else:
+            elif float(stat.price_change) > 0:
                 price_message = f'Цены на квартиры поднялись на {stat.price_change}%'
-        else:
-            price_message = ''
 
+        price_per_sq_change_message = 'Средняя цена за м² не изменилась'
         if stat.price_per_sq_change:
-            if float(stat.price_per_sq_change) <= 0:
+            if float(stat.price_per_sq_change) < 0:
                 price_per_sq_change_message = f'Средняя цена за м² упала на: {stat.price_per_sq_change}%'
-            else:
+            elif float(stat.price_per_sq_change) > 0:
                 price_per_sq_change_message = f'Средняя цена за м² поднялась на: {stat.price_per_sq_change}%'
-        else:
-            price_per_sq_change_message = ''
 
         message = f"""На {datetime.now().astimezone(pytz.timezone('Europe/Volgograd')).strftime("%d/%m/%Y, %H:%M")}:
 
@@ -40,7 +38,7 @@ class Command(BaseCommand):
 Средняя цена за м²: {self.format_price(stat.price_per_sq)}
 {price_per_sq_change_message}
 
-<a href="http://45.143.138.80">Ссылка на таблицу</a>"""
+Ссылка на таблицу: <a href="http://vlg-offers.ru">vlg-offers.ru</a>"""
 
         if stat.interesting_offers.count():
             message += '\n\nИнтересные предложения:\n(35м² за 1 500 000)\n'
