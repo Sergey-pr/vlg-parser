@@ -67,4 +67,3 @@ class Statistic(TimeStampedModel):
     interesting_offers = models.ManyToManyField(Offer, related_name='interesting')
     avito_new = models.ManyToManyField(Offer, related_name='avito_new')
     cian_new = models.ManyToManyField(Offer, related_name='cian_new')
-

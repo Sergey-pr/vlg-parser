@@ -43,10 +43,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         path = options.get('path_to_file')
-        obj_list = []
         with open(path) as json_file:
             data = json.load(json_file)
 
+        obj_list = self.process_offers(data)
+
+        if Statistic.objects.count():
+            last_statistic = Statistic.objects.latest('created')
+            last_statistic.cian_new.set(obj_list)
+        os.rename(path, f'{path}.parsed_{datetime.now().timestamp()}')
+
+    def process_offers(self, data):
+        obj_list = []
         for offer in data:
             clean_data = self.parse_data(offer)
 
@@ -75,11 +83,7 @@ class Command(BaseCommand):
             )
             if created:
                 obj_list.append(obj)
-
-        if Statistic.objects.count():
-            last_statistic = Statistic.objects.latest('created')
-            last_statistic.cian_new.set(obj_list)
-        os.rename(path, f'{path}.parsed_{datetime.now().timestamp()}')
+        return obj_list
 
     def parse_data(self, data):
         clean_data = {}

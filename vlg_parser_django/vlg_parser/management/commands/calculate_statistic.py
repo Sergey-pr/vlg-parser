@@ -12,7 +12,7 @@ class Command(BaseCommand):
         price_per_sq = self.get_price_per_sq()
         price = self.get_price()
         price_change = self.get_price_change()
-        interesting_offers =  self.get_interesting_offers()
+        interesting_offers = self.get_interesting_offers()
         create_args = {
             'price_per_sq': price_per_sq,
             'price': price,
