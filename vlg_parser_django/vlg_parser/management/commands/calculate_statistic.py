@@ -92,5 +92,5 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_interesting_offers():
-        offers = Offer.objects.filter(Q(cian_price__lte=1500000) | Q(avito_price__lte=1500000), area__gte=35)
+        offers = Offer.objects.filter(Q(cian_price__lte=1500000) | Q(avito_price__lte=1500000), area__gte=40)
         return offers

@@ -68,7 +68,7 @@ class Command(BaseCommand):
         return message
 
     def get_interesting_offers(self, stat):
-        message = '\n\nИнтересные предложения:\n(35м² за 1 500 000)\n'
+        message = '\n\nИнтересные предложения:\n(40м² за 1 500 000)\n'
         for offer in stat.interesting_offers.all():
             if offer.avito_price:
                 price = self.format_price(offer.avito_price)
