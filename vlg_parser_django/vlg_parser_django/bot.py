@@ -93,6 +93,10 @@ def check_number(message, updates_json):
 def show_all_entries(message, updates_json):
     with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
+        
+    if not database_data:
+        send_message(get_chat_id(updates_json), 'Записи не найдены')
+        return
     data = {f'{data.get("surname")} {data.get("name")}': data for user_id, data in database_data.items()}
 
     data_keys = sorted(list(data.keys()))
@@ -112,12 +116,19 @@ def show_all_entries(message, updates_json):
             message += f"Телеграм: {entry_data.get('telegram')}\n"
         message += '\n'
 
-        send_message(get_chat_id(updates_json), message)
+    send_message(get_chat_id(updates_json), message)
 
 def add_entry(message, updates_json):
     with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
     data_list = message.split(' ')
+    if len(data_list) < 4:
+        send_message(
+            get_chat_id(updates_json),
+            """Для Добавления записи укажите обязательную информацию.\nНапример:\n/add 1337 Тест Тестович
+Также можно указать вк и телеграм для этого укажите vk:vkontakte_name или t:telegram_name соответственно"""
+        )
+        return
     data_dict = {
         'number': data_list[1],
         'surname': data_list[2],
@@ -130,11 +141,14 @@ def add_entry(message, updates_json):
             data_dict.update({'telegram': data_entry})
     user_id = 0
     while True:
-        if user_id not in list(database_data.keys()):
+        if str(user_id) not in database_data.keys():
+            print(list(database_data.keys()))
+            print(user_id)
             data_dict.update({'id': user_id})
             database_data.update({user_id: data_dict})
             break
         user_id += 1
+    print(database_data)
     with open('data.json', 'w') as json_file:
         json.dump(database_data, json_file)
     send_message(
@@ -146,10 +160,16 @@ def del_entry(message, updates_json):
     with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
     message_list = message.split(' ')
+    if len(message_list) < 2:
+        send_message(
+            get_chat_id(updates_json),
+            f"Для удаления записи укажите id который хотите удалить.\nНапример:\n/del 1"
+        )
+        return
     id_to_delete = message_list[-1]
-    database_data.pop(int(id_to_delete))
+    database_data.pop(id_to_delete)
     with open('data.json', 'w') as json_file:
-        json.dump(data, json_file)
+        json.dump(database_data, json_file)
     send_message(
         get_chat_id(updates_json),
         f"Запись ID: {id_to_delete} удалена"
@@ -206,4 +226,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
