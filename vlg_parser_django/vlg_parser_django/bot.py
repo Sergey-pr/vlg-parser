@@ -173,6 +173,10 @@ def process_message(message, updates_json):
             function(message, updates_json)
             break
 
+def check_maket(message):
+    if 'где макет' in message.lower():
+        send_message(get_chat_id(updates_json), "Будет в понедельник")
+
 def main():
     """
     Точка входа в программу
@@ -191,6 +195,7 @@ def main():
             message = updates_json['message'].get('text')
             check_number(message, updates_json)
             process_message(message, updates_json)
+            check_maket(message)
             last_update_id = current_update_id
         # Ждём одну секунду
         sleep(1)
