@@ -130,7 +130,7 @@ def add_entry(message, updates_json):
             data_dict.update({'telegram': data_entry})
     user_id = 0
     while True:
-        if user_id not in database_data.keys():
+        if user_id not in list(database_data.keys()):
             data_dict.update({'id': user_id})
             database_data.update({user_id: data_dict})
             break
