@@ -6,6 +6,7 @@
 import requests
 import re
 import os
+import json
 from time import sleep
 from dotenv import load_dotenv
 from collections import OrderedDict
@@ -92,7 +93,7 @@ def check_number(message, updates_json):
 def show_all_entries(message, updates_json):
     with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
-        data = {f'{data.get(surname)} {data.get(name)}': data for user_id, data in database_data.items()}
+        data = {f'{data.get("surname")} {data.get("name")}': data for user_id, data in database_data.items()}
 
         data_keys = sorted(list(data.keys()))
 
@@ -114,7 +115,7 @@ def show_all_entries(message, updates_json):
             send_message(get_chat_id(updates_json), message)
 
 def add_entry(message, updates_json):
-    with open('data.json', 'w+') as json_file:
+    with open('data.json', 'r+') as json_file:
         database_data = json.load(json_file)
         data_list = message.split(' ')
         data_dict = {
@@ -190,6 +191,8 @@ def main():
         # Получаем его идентификатор
         current_update_id = get_update_id(updates_json)
 
+        print(updates_json['message'].get('text'))
+
         # Если было новое событие, отправляем сообщение и запоминаем его идентификатор
         if current_update_id != last_update_id:
             message = updates_json['message'].get('text')
@@ -201,7 +204,6 @@ def main():
         sleep(1)
 
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     main()
-
 
