@@ -114,7 +114,7 @@ def show_all_entries(message, updates_json):
             send_message(get_chat_id(updates_json), message)
 
 def add_entry(message, updates_json):
-    with open('data.json', 'rw') as json_file:
+    with open('data.json', 'w+') as json_file:
         database_data = json.load(json_file)
         data_list = message.split(' ')
         data_dict = {
@@ -141,7 +141,7 @@ def add_entry(message, updates_json):
         )
 
 def del_entry(message, updates_json):
-    with open('data.json', 'rw') as json_file:
+    with open('data.json', 'w+') as json_file:
         database_data = json.load(json_file)
         message_list = message.split(' ')
         id_to_delete = message_list[-1]
