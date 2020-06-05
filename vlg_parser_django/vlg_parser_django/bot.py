@@ -5,6 +5,7 @@
 
 import requests
 import re
+import os
 from time import sleep
 from dotenv import load_dotenv
 from collections import OrderedDict
