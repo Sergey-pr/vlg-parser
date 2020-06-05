@@ -93,65 +93,67 @@ def check_number(message, updates_json):
 def show_all_entries(message, updates_json):
     with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
-        data = {f'{data.get("surname")} {data.get("name")}': data for user_id, data in database_data.items()}
+    data = {f'{data.get("surname")} {data.get("name")}': data for user_id, data in database_data.items()}
 
-        data_keys = sorted(list(data.keys()))
+    data_keys = sorted(list(data.keys()))
 
-        list_of_tuples = [(key, data[key]) for key in data_keys]
-        ordered_data_dict = OrderedDict(list_of_tuples)
-        message = ''
-        for _, entry_data in ordered_data_dict.items():
-            message += f"""ID: {entry_data.get('id')}
+    list_of_tuples = [(key, data[key]) for key in data_keys]
+    ordered_data_dict = OrderedDict(list_of_tuples)
+    message = ''
+    for _, entry_data in ordered_data_dict.items():
+        message += f"""ID: {entry_data.get('id')}
 Тел. {entry_data.get('number')}
 Фамилия: {entry_data.get('surname')}
 Имя: {entry_data.get('name')}
 """
-            if entry_data.get('vk'):
-                message += f"Вконтакте: {entry_data.get('vk')}\n"
-            if entry_data.get('vk'):
-                message += f"Телеграм: {entry_data.get('telegram')}\n"
-            message += '\n'
+        if entry_data.get('vk'):
+            message += f"Вконтакте: {entry_data.get('vk')}\n"
+        if entry_data.get('vk'):
+            message += f"Телеграм: {entry_data.get('telegram')}\n"
+        message += '\n'
 
-            send_message(get_chat_id(updates_json), message)
+        send_message(get_chat_id(updates_json), message)
 
 def add_entry(message, updates_json):
-    with open('data.json', 'r+') as json_file:
+    with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
-        data_list = message.split(' ')
-        data_dict = {
-            'number': data_list[1],
-            'surname': data_list[2],
-            'name': data_list[3]
-        }
-        for data_entry in data_list:
-            if 'vk:' in data_entry:
-                data_dict.update({'vk': data_entry})
-            if 't:' in data_entry:
-                data_dict.update({'telegram': data_entry})
-        user_id = 0
-        while True:
-            if user_id not in database_data.keys():
-                data_dict.update({'id': user_id})
-                database_data.update({user_id: data_dict})
-                break
-            user_id += 1
+    data_list = message.split(' ')
+    data_dict = {
+        'number': data_list[1],
+        'surname': data_list[2],
+        'name': data_list[3]
+    }
+    for data_entry in data_list:
+        if 'vk:' in data_entry:
+            data_dict.update({'vk': data_entry})
+        if 't:' in data_entry:
+            data_dict.update({'telegram': data_entry})
+    user_id = 0
+    while True:
+        if user_id not in database_data.keys():
+            data_dict.update({'id': user_id})
+            database_data.update({user_id: data_dict})
+            break
+        user_id += 1
+    with open('data.json', 'w') as json_file:
         json.dump(database_data, json_file)
-        send_message(
-            get_chat_id(updates_json),
-            "Запись добавлена"
-        )
+    send_message(
+        get_chat_id(updates_json),
+        "Запись добавлена"
+    )
 
 def del_entry(message, updates_json):
-    with open('data.json', 'w+') as json_file:
+    with open('data.json', 'r') as json_file:
         database_data = json.load(json_file)
-        message_list = message.split(' ')
-        id_to_delete = message_list[-1]
-        database_data.pop(int(id_to_delete))
+    message_list = message.split(' ')
+    id_to_delete = message_list[-1]
+    database_data.pop(int(id_to_delete))
+    with open('data.json', 'w') as json_file:
         json.dump(data, json_file)
-        send_message(
-            get_chat_id(updates_json),
-            f"Запись ID: {id_to_delete} удалена"
-        )
+    send_message(
+        get_chat_id(updates_json),
+        f"Запись ID: {id_to_delete} удалена"
+    )
 
 def del_all_entries(message, updates_json):
     with open('data.json', 'w') as json_file:
@@ -190,8 +192,6 @@ def main():
         updates_json = last_update(get_updates_json())
         # Получаем его идентификатор
         current_update_id = get_update_id(updates_json)
-
-        print(updates_json['message'].get('text'))
 
         # Если было новое событие, отправляем сообщение и запоминаем его идентификатор
         if current_update_id != last_update_id:
