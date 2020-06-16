@@ -100,10 +100,7 @@ class Command(BaseCommand):
 
     def get_changes(self):
         last_day = datetime.today() - timedelta(days=1)
-        offers = Offer.objects.filter(
-            Q(avito_old_prices__isnull=False) | Q(cian_old_prices__isnull=False),
-            modified__gte=last_day
-        )
+        offers = Offer.objects.filter(price_change_date__gte=last_day)
 
         if not offers:
             return

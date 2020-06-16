@@ -46,6 +46,7 @@ class Offer(TimeStampedModel):
     )
     house_type = models.CharField(max_length=512, blank=True, null=True)
     rooms = models.CharField(max_length=512, blank=True, null=True)
+    price_change_date = models.DateTimeField()
 
     def __str__(self):
         if self.cian_id or self.avito_id:

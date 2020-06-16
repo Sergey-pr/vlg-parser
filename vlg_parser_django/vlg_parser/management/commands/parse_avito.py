@@ -68,6 +68,7 @@ class Command(BaseCommand):
                         old_prices = []
                     old_prices.append(offer_obj.price)
                     offer_obj.avito_old_prices = old_prices
+                    offer_obj.price_change_date = datetime.now()
                     offer_obj.save()
 
             obj, created = Offer.objects.update_or_create(
