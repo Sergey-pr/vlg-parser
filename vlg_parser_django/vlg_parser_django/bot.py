@@ -31,7 +31,7 @@ def get_updates_json():
     # Ждём ответа на протяжении заданного  в параметре timeout числа секунд
     params = {'timeout': 100, 'offset': None}
     # Выполняем Get-запрос, возвращается объект ответа
-    response = requests.get(URL + 'getUpdates', data=params, proxies=PROXIES)
+    response = requests.get(URL + 'getUpdates', data=params)
     # Из объекта ответа берём JSON
     return response.json()
 
@@ -74,7 +74,7 @@ def send_message(chat_id, text):
     # Формируем параметры запроса: куда и что отправляем
     params = {'chat_id': chat_id, 'text': text}
     # Отправляем Post-запрос, возвращаем объект ответа
-    return requests.post(URL + 'sendMessage', data=params, proxies=PROXIES)
+    return requests.post(URL + 'sendMessage', data=params)
 
 
 def check_number(message, updates_json):
