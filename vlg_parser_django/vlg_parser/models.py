@@ -4,6 +4,11 @@ from django_extensions.db.fields import ModificationDateTimeField
 from django_extensions.db.models import TimeStampedModel
 
 
+class OfferObjectsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(archived=False)
+
+
 class Offer(TimeStampedModel):
     modified = ModificationDateTimeField('Обновлено')
 
@@ -47,6 +52,10 @@ class Offer(TimeStampedModel):
     house_type = models.CharField(max_length=512, blank=True, null=True)
     rooms = models.CharField(max_length=512, blank=True, null=True)
     price_change_date = models.DateTimeField(blank=True, null=True)
+    archived = models.BooleanField(default=False)
+
+    objects = OfferObjectsManager()
+    all = models.Manager()
 
     def __str__(self):
         if self.cian_id or self.avito_id:

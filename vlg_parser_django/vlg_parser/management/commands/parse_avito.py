@@ -102,6 +102,7 @@ class Command(BaseCommand):
                 clean_data.update({MAPPING_TO_INT.get(key): value})
         if current_floor and floors:
             clean_data.update({'floor': f'{current_floor} из {floors}'})
+        clean_data.update({'archived': False})
         return clean_data
 
     @staticmethod

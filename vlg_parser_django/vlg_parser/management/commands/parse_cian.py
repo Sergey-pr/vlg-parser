@@ -102,6 +102,7 @@ class Command(BaseCommand):
                 value = value.replace(',', '.')
                 value = float(value)
                 clean_data.update({MAPPING_TO_INT.get(key): value})
+        clean_data.update({'archived': False})
         return clean_data
 
     @staticmethod
