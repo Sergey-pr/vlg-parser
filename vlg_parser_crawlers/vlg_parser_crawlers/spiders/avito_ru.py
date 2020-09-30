@@ -10,7 +10,7 @@ class AvitoSpider(scrapy.Spider):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.url = 'https://www.avito.ru/volgograd/kvartiry/prodam-ASgBAgICAUSSA8YQ?cd=1&pmax=2000000&district=2-3-9&f=ASgBAQECAUSSA8YQAUDKCDSCWYBZ_lgCReIHF3siZnJvbSI6NTE4OCwidG8iOm51bGx9hAkVeyJmcm9tIjoyNSwidG8iOm51bGx9'
+        self.url = 'https://www.avito.ru/volgograd/kvartiry/prodam-ASgBAgICAUSSA8YQ?district=2-3-9&f=ASgBAgECAUSSA8YQAUXgBxd7ImZyb20iOjUxMjQsInRvIjpudWxsfQ&pmax=2500000&s=104'
         self.page = 1
 
     def start_requests(self):
